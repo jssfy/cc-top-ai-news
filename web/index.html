@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 新闻热榜</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI 新闻热榜</h1>
+            <p class="subtitle">每日精选国内外 AI 领域热点新闻</p>
+        </header>
+
+        <div class="date-nav">
+            <button id="prevBtn" class="nav-btn" onclick="navigate('prev')" disabled>&larr; 前一天</button>
+            <div class="date-display">
+                <span id="currentDate"></span>
+                <button id="todayBtn" class="today-btn" onclick="goToday()" style="display:none">回到今天</button>
+            </div>
+            <button id="nextBtn" class="nav-btn" onclick="navigate('next')" disabled>后一天 &rarr;</button>
+        </div>
+
+        <div class="news-grid">
+            <section class="news-section domestic">
+                <h2><span class="flag">🇨🇳</span> 国内 AI 热点</h2>
+                <div id="domesticNews" class="news-list">
+                    <div class="loading">加载中...</div>
+                </div>
+            </section>
+
+            <section class="news-section global">
+                <h2><span class="flag">🌍</span> 全球 AI 热点</h2>
+                <div id="globalNews" class="news-list">
+                    <div class="loading">加载中...</div>
+                </div>
+            </section>
+        </div>
+
+        <div class="actions">
+            <button class="fetch-btn" onclick="fetchLatestNews()">抓取最新新闻</button>
+        </div>
+
+        <footer>
+            <p>AI News Aggregator &copy; 2026 | 数据来源于互联网公开信息</p>
+        </footer>
+    </div>
+
+    <!-- Comment Modal -->
+    <div id="commentModal" class="modal" onclick="closeModalOutside(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">评论</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="commentList" class="comment-list"></div>
+            <div class="comment-form">
+                <input type="text" id="commentAuthor" placeholder="昵称（可选）" maxlength="50">
+                <textarea id="commentContent" placeholder="写下你的评论..." maxlength="1000" rows="3"></textarea>
+                <button onclick="submitComment()">发表评论</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

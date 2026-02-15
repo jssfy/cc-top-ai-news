@@ -1,0 +1,20 @@
+# Build output
+bin/
+
+# Database
+data.db
+data.db-shm
+data.db-wal
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation generated per session
+docs/*-202[0-9]-[0-1][0-9]-[0-3][0-9].md
