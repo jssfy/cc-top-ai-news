@@ -1,0 +1,12 @@
+bin/
+data.db
+data.db-shm
+data.db-wal
+.git/
+.github/
+.idea/
+.vscode/
+.DS_Store
+docs/
+deploy/
+*.md
