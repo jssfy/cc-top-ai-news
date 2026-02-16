@@ -78,7 +78,7 @@ help:
 	@echo "  make docker-shell       - 进入容器 shell"
 	@echo "  make docker-clean       - 清理所有资源（包括数据）"
 	@echo "  make docker-rebuild     - 重新构建并部署"
-	@echo "  make docker-dev         - 开发模式（构建+启动+日志）"
+	@echo "  make docker-dev         - 开发模式（HTTPS + local.yeanhua.asia）⭐"
 	@echo "  make docker-prune       - 清理未使用的 Docker 资源"
 	@echo "  make docker-backup      - 备份数据库"
 	@echo "  make docker-health      - 检查服务健康状态"
@@ -200,8 +200,53 @@ docker-rebuild: docker-build
 	@echo "==> 查看日志 (Ctrl+C 退出)..."
 	@make docker-logs
 
-## docker-dev: 开发模式（构建 + 启动 + 查看日志）
-docker-dev: docker-build docker-up docker-logs
+## docker-dev: 开发模式（构建 + HTTPS 启动 + 查看日志）
+docker-dev:
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo "🛠️ 开发模式启动（HTTPS + local.yeanhua.asia）"
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo ""
+	@echo "[1/4] 检查本地域名配置..."
+	@if grep -q "local.yeanhua.asia" /etc/hosts 2>/dev/null; then \
+		echo "✓ local.yeanhua.asia 已配置"; \
+	else \
+		echo "⚠️  local.yeanhua.asia 未配置"; \
+		echo ""; \
+		echo "请运行: make setup-local-domain"; \
+		echo "或手动添加到 /etc/hosts:"; \
+		echo "  127.0.0.1 local.yeanhua.asia"; \
+		echo ""; \
+	fi
+	@echo ""
+	@echo "[2/4] 检查/生成 mkcert 证书..."
+	@if ./scripts/cert-manager.sh check >/dev/null 2>&1; then \
+		echo "✓ 证书已存在"; \
+	else \
+		echo "生成 mkcert 本地证书..."; \
+		./scripts/cert-manager.sh generate mkcert || exit 1; \
+	fi
+	@echo ""
+	@echo "[3/4] 构建并启动服务（HTTPS）..."
+	@$(MAKE) docker-build
+	@export DOCKER_IMAGE=$(DOCKER_IMAGE) && docker compose -f docker-compose.yml -f docker-compose.https.yml up -d
+	@echo "✓ 服务已启动"
+	@echo ""
+	@echo "[4/4] 服务信息..."
+	@sleep 2
+	@$(MAKE) docker-ps
+	@echo ""
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo "🎉 开发环境就绪！"
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo ""
+	@echo "访问地址:"
+	@echo "  • https://local.yeanhua.asia 🔒"
+	@echo "  • https://localhost 🔒"
+	@echo ""
+	@echo "查看日志: make docker-logs"
+	@echo ""
+	@echo "==> 查看实时日志 (Ctrl+C 退出)..."
+	@$(MAKE) docker-logs
 
 # ====================================
 # One-Click Deployment (一键部署)

@@ -23,6 +23,8 @@
 
 | 文档 | 说明 | 适用场景 |
 |------|------|----------|
+| [local-dev-guide-2026-02-16.md](local-dev-guide-2026-02-16.md) | 本地开发指南 | **⭐ 一键启动开发环境** |
+| [docker-commands-comparison-2026-02-16.md](docker-commands-comparison-2026-02-16.md) | Docker 命令对比 | **dev vs up-https** |
 | [makefile-usage-2026-02-16.md](makefile-usage-2026-02-16.md) | Makefile 使用指南 | **本地开发必读** |
 | [makefile-integration-2026-02-16.md](makefile-integration-2026-02-16.md) | Makefile 集成总结 | 了解设计思路 |
 | [local-domain-setup-2026-02-16.md](local-domain-setup-2026-02-16.md) | 本地域名配置 | 使用本地域名开发 |
@@ -138,7 +140,9 @@
 
 ### 我想...
 
-- **快速参考** → [quick-reference-2026-02-16.md](quick-reference-2026-02-16.md) ⭐ 新增
+- **快速参考** → [quick-reference-2026-02-16.md](quick-reference-2026-02-16.md) ⭐
+- **本地开发** → [local-dev-guide-2026-02-16.md](local-dev-guide-2026-02-16.md) ⭐
+- **命令对比** → [docker-commands-comparison-2026-02-16.md](docker-commands-comparison-2026-02-16.md)
 - **启动项目** → [deploy-quickstart-2026-02-16.md](deploy-quickstart-2026-02-16.md)
 - **更新代码** → [code-update-guide-2026-02-16.md](code-update-guide-2026-02-16.md) ⭐
 - **查看 make 命令** → [makefile-usage-2026-02-16.md](makefile-usage-2026-02-16.md)
@@ -156,9 +160,9 @@
 
 ## 📊 文档统计
 
-- **总文档数**：19 篇
+- **总文档数**：21 篇
 - **部署相关**：7 篇
-- **开发工具**：11 篇
+- **开发工具**：13 篇
 - **架构设计**：1 篇
 - **最新更新**：2026-02-16
 
