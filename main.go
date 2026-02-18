@@ -40,6 +40,13 @@ func main() {
 	// Setup routes
 	mux := http.NewServeMux()
 
+	// Health check
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
+
 	// API routes
 	mux.HandleFunc("/api/news", corsMiddleware(newsHandler.GetNews))
 	mux.HandleFunc("/api/news/fetch", corsMiddleware(methodOnly("POST", newsHandler.FetchNews)))

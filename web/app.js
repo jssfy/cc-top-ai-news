@@ -1,4 +1,4 @@
-const API = '';
+const API = '.';
 let currentDate = '';
 let currentNewsId = null;
 

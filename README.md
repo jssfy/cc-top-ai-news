@@ -6,103 +6,50 @@ RSS-based AI news aggregator with real-time feeds.
 
 ## 🚀 快速开始
 
-### 本地开发（HTTPS）
+### 本地开发
 
+**HTTP 开发**:
 ```bash
-# 一键启动（自动生成 mkcert 证书 + HTTPS）
-make docker-dev
+# 构建并启动服务
+docker build -t news:latest .
+docker-compose up -d
 
 # 访问服务
-open https://local.yeanhua.asia
-
-# 查看所有可用命令
-make help
+open http://localhost:8080
 ```
 
-**自动完成**：
-- ✅ 检查 local.yeanhua.asia 域名配置
-- ✅ 自动生成 mkcert 本地证书
-- ✅ 构建 Docker 镜像
-- ✅ 启动 HTTPS 服务
-- ✅ 显示实时日志
-
-**与 docker-up-https 的区别**：[查看对比说明](docs/docker-commands-comparison-2026-02-16.md)
-
-### 生产环境一键部署 ⭐
-
-**首次部署（HTTPS）**：
+**HTTPS 开发(使用 https-toolkit)**:
 ```bash
-# SSH 到服务器
-ssh user@服务器IP
-cd ~/top-ai-news
+# 安装 https-toolkit
+git clone https://github.com/yourusername/https-toolkit.git
+cd https-toolkit
+make install
 
-# 一键部署（自动生成证书+构建+启动）
-make deploy-https
+# 返回项目目录,启动 HTTPS 服务
+cd /path/to/top-ai-news
+https-deploy --dev
 
 # 访问服务
-# https://data.yeanhua.asia
+open https://local.yeanhua.asia/news
 ```
 
-**代码更新（重新加载）**：
+详见: [https-toolkit 文档](https://github.com/yourusername/https-toolkit)
+
+### 生产环境部署
+
 ```bash
-# SSH 到服务器
-cd ~/top-ai-news
-
-# 一键更新（拉取代码+重新构建+重启）
-make update-https
-
-# 完成！
-```
-
-### 本地 HTTPS 开发
-
-**推荐使用 mkcert**：
-```bash
-# 生成本地证书（无需配置）
-make cert-generate-mkcert
-
-# 启动 HTTPS 服务
-make docker-up-https
-
-# 访问服务
-open https://local.yeanhua.asia
-```
-
-### 手动部署（了解细节）
-
-**HTTP-01 验证（单域名）**：
-```bash
-# ⚠️ 在生产服务器上运行
-ssh user@服务器IP
-cd ~/top-ai-news
-
-# 前置条件：域名解析到服务器，80 端口开放
-# 停止占用 80 端口的服务
-docker compose down
-
-# 生成证书
-make cert-generate
+# 构建镜像
+docker build -t news:latest .
 
 # 启动服务
-make docker-up-https
+docker-compose up -d
+
+# 查看状态
+docker-compose ps
+docker-compose logs -f
 ```
 
-**DNS-01 验证（泛域名）**：
-```bash
-# ✅ 可以在本地运行
-make cert-setup-dns
-vim ~/.secrets/dns-credentials.ini
-pip3 install certbot-dns-aliyun
-make cert-generate-dns
-
-# 上传到服务器
-scp ~/.local-certs/yeanhua.asia/* user@服务器IP:~/certs/
-
-# 在服务器上部署
-ssh user@服务器IP
-cd ~/top-ai-news
-make docker-up-https
-```
+**HTTPS 配置**: 使用 [https-toolkit](https://github.com/yourusername/https-toolkit) 或自行配置 nginx/caddy 反向代理
 
 ---
 
@@ -112,154 +59,41 @@ make docker-up-https
 
 ### 快速导航
 
-**入门指南**：
-- [快速参考](docs/quick-reference-2026-02-16.md) - ⭐ **常用命令速查**
-- [本地开发指南](docs/local-dev-guide-2026-02-16.md) - ⭐ **一键启动开发环境**
-- [新手入门](docs/deploy-quickstart-2026-02-16.md) - 5 分钟快速上手
-- [代码更新指南](docs/code-update-guide-2026-02-16.md) - ⭐ **如何更新代码**
-- [Makefile 命令](docs/makefile-usage-2026-02-16.md) - 完整命令参考
-- [完整部署指南](docs/deployment-guide-2026-02-16.md) - 深入了解架构
+**部署指南**：
+- [Docker Compose 配置说明](docs/docker-compose-configuration-2026-02-18.md) - ⭐ **配置文件详解**
+- [部署指南](docs/deployment-guide-2026-02-16.md) - 深入了解架构
 
-**HTTPS 证书**：
-- [Let's Encrypt 配置](docs/letsencrypt-setup-2026-02-16.md) - 生产环境证书
-- [证书生成运行位置](docs/cert-generation-location-2026-02-16.md) - ⭐ **在哪运行命令**
-- [单域名部署指南](docs/single-domain-deployment-2026-02-16.md) - HTTP-01 完整流程
-- [本地 HTTPS 配置](docs/local-https-setup-2026-02-16.md) - 开发环境配置
-- [证书方案对比](docs/certificate-comparison-2026-02-16.md) - mkcert vs Let's Encrypt
-- [默认改用 Let's Encrypt](docs/cert-default-letsencrypt-2026-02-16.md) - ⚠️ 重要变更
+**HTTPS 配置**：
+- ⭐ [https-toolkit](https://github.com/yourusername/https-toolkit) - 独立 HTTPS 工具(推荐)
+- [HTTPS 文件清理记录](docs/cleanup-https-files-2026-02-18.md) - 架构演进
 
 **索引**：
 - [文档总索引](docs/README.md) - 查看所有文档
+
+**注**: HTTPS 相关文档已迁移至 [https-toolkit/docs/archive](../https-toolkit/docs/archive/)
 
 ---
 
 ## 🛠️ 常用命令
 
 ```bash
-# 🚀 快速部署（推荐）
-make deploy             # 一键部署（HTTP，首次）
-make deploy-https       # 一键部署（HTTPS，首次）⭐
-make update             # 代码更新（HTTP）
-make update-https       # 代码更新（HTTPS）⭐
+# 🚀 Docker 服务管理
+docker build -t news:latest .      # 构建镜像
+docker-compose up -d                # 启动服务
+docker-compose down                 # 停止服务
+docker-compose restart              # 重启服务
+docker-compose ps                   # 查看状态
+docker-compose logs -f              # 查看日志
 
-# 📦 Docker 服务管理
-make docker-up          # 启动服务（HTTP）
-make docker-up-https    # 启动服务（HTTPS）🔒
-make docker-down        # 停止服务
-make docker-restart     # 重启服务
-make docker-rebuild     # 重新构建并部署
+# 📊 健康检查
+curl http://localhost:8080/health   # 检查服务状态
+docker ps                           # 查看容器健康状态
 
-# 📊 监控和调试
-make docker-logs        # 查看日志
-make docker-ps          # 查看状态
-make docker-health      # 健康检查
-
-# HTTPS 证书管理
-make cert-check              # 检查证书状态和有效期
-make cert-generate           # 生成证书（Let's Encrypt HTTP-01，单域名）
-make cert-generate-mkcert    # 生成本地证书（mkcert，推荐本地开发）
-make cert-generate-dns       # 生成泛域名证书（DNS-01，需 DNS API）
-make cert-setup-dns          # 配置 DNS API（DNS-01 使用）
-make cert-renew              # 续期证书（Let's Encrypt 90天）
-make cert-info               # 查看证书详细信息
-make cert-clean              # 删除证书
+# 🔒 HTTPS 配置
+# 使用 https-toolkit (推荐)
+https-deploy --dev                  # 本地 HTTPS 开发
+# 详见: https://github.com/yourusername/https-toolkit
 ```
-
----
-
-## 🔒 HTTPS 证书配置
-
-### 方案选择
-
-| 使用场景 | 推荐方案 | 配置命令 |
-|---------|---------|---------|
-| **本地开发** | mkcert | `make cert-generate-mkcert` |
-| **生产环境（单域名）** | Let's Encrypt HTTP-01 | `make cert-generate` |
-| **生产环境（多子域名）** | Let's Encrypt DNS-01 | `make cert-setup-dns` + `make cert-generate-dns` |
-| **团队共享** | Let's Encrypt | `make cert-generate` |
-
-### mkcert（本地开发推荐）
-
-**优势**：
-- ✅ 配置简单，一分钟完成
-- ✅ 无需域名和 DNS API
-- ✅ 支持 localhost 和内网 IP
-- ✅ 证书长期有效，无需续期
-
-**使用**：
-```bash
-make cert-generate-mkcert
-make docker-up-https
-```
-
-### Let's Encrypt（生产环境）
-
-**优势**：
-- ✅ 全球浏览器信任
-- ✅ 免费且自动化
-- ✅ 支持单域名和泛域名
-
-#### 方式 1：HTTP-01 验证（单域名，推荐）⭐
-
-**特点**：
-- ✅ 无需 DNS API
-- ✅ 配置简单
-- ❌ 只支持 `data.yeanhua.asia`
-- ⚠️ **必须在生产服务器上运行**
-- ⚠️ 需要 80 端口公网可访问
-
-**配置步骤**：
-```bash
-# ⚠️ 在生产服务器上运行
-ssh user@服务器IP
-cd ~/top-ai-news
-
-# 前置条件：域名解析到服务器，80 端口开放
-# 停止占用 80 端口的服务
-docker compose down
-
-# 生成证书
-make cert-generate
-
-# 启动服务
-make docker-up-https
-```
-
-#### 方式 2：DNS-01 验证（泛域名）
-
-**特点**：
-- ✅ 支持 `*.yeanhua.asia`
-- ✅ 无需 80 端口
-- ✅ **可以在本地或服务器运行**
-- ❌ 需要 DNS API 配置
-
-**配置步骤（本地生成）**：
-```bash
-# 1. 配置 DNS API（本地）
-make cert-setup-dns
-vim ~/.secrets/dns-credentials.ini
-
-# 2. 安装插件
-pip3 install certbot-dns-aliyun      # 阿里云
-pip3 install certbot-dns-cloudflare  # Cloudflare
-pip3 install certbot-dns-dnspod      # DNSPod
-
-# 3. 生成泛域名证书
-make cert-generate-dns
-
-# 4. 上传到服务器
-scp ~/.local-certs/yeanhua.asia/* user@服务器IP:~/certs/
-
-# 5. 在服务器上启动服务
-ssh user@服务器IP
-cd ~/top-ai-news
-make docker-up-https
-```
-
-**详细文档**：
-- [Let's Encrypt 配置指南](docs/letsencrypt-setup-2026-02-16.md)
-- [证书方案对比](docs/certificate-comparison-2026-02-16.md)
-- [为何本地用 mkcert](docs/why-mkcert-for-local-2026-02-16.md)
 
 ---
 
@@ -267,12 +101,12 @@ make docker-up-https
 
 ### 本地开发
 
-- **HTTP**：http://local.yeanhua.asia 或 http://localhost
-- **HTTPS**：https://local.yeanhua.asia 🔒 或 https://localhost 🔒
+- **HTTP**: `http://localhost:8080`
+- **HTTPS**: 使用 [https-toolkit](https://github.com/yourusername/https-toolkit) - `https://local.yeanhua.asia/news`
 
 ### 生产环境
 
-- **正式服务**：https://data.yeanhua.asia
+- 根据部署配置自行设置域名和 HTTPS
 
 ---
 
@@ -280,156 +114,111 @@ make docker-up-https
 
 ```
 top-ai-news/
-├── main.go                 # 主程序
-├── Makefile               # 开发命令
-├── Dockerfile             # 容器镜像
-├── docker-compose.yml     # 服务编排（HTTP）
-├── docker-compose.https.yml  # HTTPS 覆盖配置
-├── .env.example           # 环境变量模板
-├── docs/                  # 📚 完整文档
-│   ├── README.md          # 文档索引
-│   ├── letsencrypt-setup-2026-02-16.md  # Let's Encrypt 指南
+├── main.go                 # 主程序 (Go Web 服务)
+├── Dockerfile              # 容器镜像构建
+├── docker-compose.yml      # Docker 服务编排
+├── web/                    # 前端静态资源
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
+├── internal/               # 内部包
+│   ├── database/           # 数据库层
+│   ├── fetcher/            # RSS 抓取
+│   └── handler/            # HTTP 处理器
+├── docs/                   # 📚 文档
+│   ├── README.md
+│   ├── docker-compose-configuration-2026-02-18.md
 │   └── ...
-├── scripts/               # 工具脚本
-│   └── cert-manager.sh    # 证书管理脚本
-└── deploy/                # 部署配置
-    ├── nginx/
-    │   └── conf.d/
-    │       ├── default.conf        # HTTP 配置
-    │       └── default-https.conf  # HTTPS 配置
-    └── init-ssl.sh        # SSL 初始化
+└── .gitignore
 ```
 
 ---
 
 ## ❓ 常见问题
 
-### Q1: 如何快速部署到生产服务器？
-
-**使用一键部署命令**：
+### Q1: 如何部署到生产服务器?
 
 ```bash
-# 首次部署
-ssh user@服务器IP
-cd ~/top-ai-news
-make deploy-https       # 自动生成证书+构建+启动
+# 1. 构建镜像
+docker build -t news:latest .
 
-# 后续更新
-make update-https       # 拉取代码+重新构建+重启
+# 2. 启动服务
+docker-compose up -d
+
+# 3. 查看状态
+docker-compose ps
+docker-compose logs -f
 ```
 
-**详细说明**：[代码更新部署指南](docs/code-update-guide-2026-02-16.md)
+**HTTPS 配置**: 使用 [https-toolkit](https://github.com/yourusername/https-toolkit) 或自行配置反向代理
 
-### Q2: 证书生成命令在哪里运行？
-
-**HTTP-01 必须在服务器运行，DNS-01 可以在本地或服务器**
-
-| 验证方式 | 运行位置 | 原因 |
-|---------|---------|------|
-| **HTTP-01** | ⚠️ **必须在服务器** | Let's Encrypt 需访问服务器 80 端口 |
-| **DNS-01** | ✅ **本地或服务器** | 只需 DNS API，无需服务器 |
-| **mkcert** | ✅ **任何地方** | 本地 CA，无外部依赖 |
-
-**详细说明**：[证书生成运行位置指南](docs/cert-generation-location-2026-02-16.md)
-
-### Q3: docker-dev 和 docker-up-https 有什么区别？
-
-**快速回答**：
-- `docker-dev`：本地开发专用，自动配置一切（mkcert + 构建 + 日志）
-- `docker-up-https`：通用 HTTPS 启动，需预先配置证书
-
-**对比表**：
-
-| 特性 | docker-dev | docker-up-https |
-|------|-----------|----------------|
-| **适用场景** | 本地开发 ⭐ | 生产/已有证书 |
-| **证书处理** | 自动生成 mkcert | 需预先存在 |
-| **构建镜像** | ✅ | ❌ |
-| **显示日志** | ✅ 实时 | ❌ 静默 |
-
-**详细说明**：[Docker 命令对比](docs/docker-commands-comparison-2026-02-16.md)
-
-### Q4: 每次更新代码都需要重新构建吗？
-
-**生产环境（镜像部署）**：是的，需要重新构建
+### Q2: 如何更新代码?
 
 ```bash
-# 使用一键更新命令
-make update-https       # 自动：git pull + build + restart
+# 1. 拉取最新代码
+git pull
+
+# 2. 重新构建镜像
+docker build -t news:latest . --no-cache
+
+# 3. 重启服务
+docker-compose down
+docker-compose up -d
 ```
 
-**开发环境（可选 Volume 挂载）**：不需要
+### Q3: docker-compose.yml 和自动生成的配置有什么区别?
 
-详见：[代码更新部署指南](docs/code-update-guide-2026-02-16.md)
+**详细说明**: [Docker Compose 配置说明](docs/docker-compose-configuration-2026-02-18.md)
 
-### Q5: 本地开发应该用哪种证书？
+**简要对比**:
 
-**推荐直接使用 docker-dev**，自动配置 mkcert：
+| 配置文件 | 用途 | 特点 |
+|---------|-----|------|
+| `docker-compose.yml` | 生产/独立运行 | 数据持久化、灵活镜像 |
+| `.https-toolkit/output/docker-compose-local.yml` | 本地 HTTPS 开发 | 自动生成、临时文件 |
+
+### Q4: 如何配置本地 HTTPS?
+
+使用 [https-toolkit](https://github.com/yourusername/https-toolkit):
 
 ```bash
-make docker-dev
+# 安装工具
+make install
+
+# 启动 HTTPS 开发环境
+cd /path/to/top-ai-news
+https-deploy --dev
+
+# 访问
+open https://local.yeanhua.asia/news
 ```
 
-**或手动配置**：
+### Q5: 数据存储在哪里?
 
 ```bash
-make cert-generate-mkcert
-make docker-up-https
+# 查看数据卷
+docker volume ls
+
+# 数据持久化在 app-data 卷中
+docker volume inspect top-ai-news_app-data
+
+# 备份数据
+docker run --rm -v top-ai-news_app-data:/data -v $(pwd):/backup \
+  alpine tar czf /backup/backup.tar.gz /data
 ```
 
-### Q6: Let's Encrypt 提示缺少 DNS API 配置怎么办？
+### Q6: 健康检查端点是什么?
 
-**使用 HTTP-01 验证（推荐）**：
-
-```bash
-# 无需 DNS API，在服务器上运行
-make deploy-https
-```
-
-**或配置 DNS-01 验证**：
+服务提供 `/health` 端点用于健康检查:
 
 ```bash
-make cert-setup-dns
-vim ~/.secrets/dns-credentials.ini
-pip3 install certbot-dns-aliyun
-make cert-generate-dns
-```
+# 检查服务状态
+curl http://localhost:8080/health
+# 输出: OK
 
-### Q7: 如何切换回 mkcert？
-
-```bash
-# 删除现有证书
-make cert-clean
-
-# 使用 mkcert 生成
-make cert-generate-mkcert
-
-# 重启服务
-make docker-restart
-```
-
-### Q8: 证书有效期是多久？
-
-- **mkcert**：1-10 年（无需续期）
-- **Let's Encrypt**：90 天（需定期续期：`make cert-renew`）
-
-### Q9: HTTPS 访问显示证书错误？
-
-**mkcert 用户**：确保已安装本地 CA
-
-```bash
-# 重新安装 CA
-mkcert -install
-
-# 重新生成证书
-make cert-generate-mkcert
-```
-
-**Let's Encrypt 用户**：检查证书是否过期
-
-```bash
-make cert-check  # 查看状态
-make cert-renew  # 续期证书
+# Docker 健康状态
+docker ps
+# 查看 STATUS 列的健康状态
 ```
 
 ---
